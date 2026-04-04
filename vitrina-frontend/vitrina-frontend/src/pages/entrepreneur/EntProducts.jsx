@@ -1,0 +1,1 @@
+export default function EntProducts() { return <div><h1 className="text-h1 font-heading text-primary mb-6">EntProducts</h1><p className="text-primary/50">Módulo en desarrollo</p></div> }

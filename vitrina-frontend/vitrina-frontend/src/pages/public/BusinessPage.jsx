@@ -1,0 +1,1 @@
+export default function BusinessPage() { return <div className="pt-20 page-section py-12"><h1 className="text-h1 font-heading text-primary">BusinessPage</h1></div> }

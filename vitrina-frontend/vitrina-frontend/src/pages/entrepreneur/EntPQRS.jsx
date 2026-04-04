@@ -1,0 +1,1 @@
+export default function EntPQRS() { return <div><h1 className="text-h1 font-heading text-primary mb-6">EntPQRS</h1><p className="text-primary/50">Módulo en desarrollo</p></div> }
