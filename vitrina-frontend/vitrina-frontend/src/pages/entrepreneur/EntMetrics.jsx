@@ -1,1 +1,0 @@
-export default function EntMetrics() { return <div><h1 className="text-h1 font-heading text-primary mb-6">EntMetrics</h1><p className="text-primary/50">Módulo en desarrollo</p></div> }
