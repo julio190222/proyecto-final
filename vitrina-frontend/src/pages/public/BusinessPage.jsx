@@ -177,7 +177,7 @@ export default function BusinessPage() {
   if (loading) return <div className="min-h-screen"><Navbar /><div className="pt-20 flex items-center justify-center h-96"><Spinner size="lg" /></div></div>
   if (!biz)    return null
 
-  const activeProducts = biz.products?.filter(p => p.is_active) || []
+  const activeProducts = biz.products || []
   const gallery        = biz.gallery || []
   const shareUrl       = window.location.href
 
