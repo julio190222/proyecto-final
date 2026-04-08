@@ -1,0 +1,566 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "Vitrina Empresarial Digital — API",
+  "collectionId": "vitrina-api-v1",
+  "dateExported": "2024-11-20",
+  "version": "1.2",
+  "folders": [
+    { "id": "f-auth",     "name": "🔐 Autenticación",          "containerId": "" },
+    { "id": "f-users",    "name": "👥 Usuarios (Admin)",        "containerId": "" },
+    { "id": "f-public",   "name": "🌐 Portal Público",          "containerId": "" },
+    { "id": "f-biz",      "name": "🏪 Microtienda",             "containerId": "" },
+    { "id": "f-products", "name": "📦 Productos y Variantes",   "containerId": "" },
+    { "id": "f-cats",     "name": "🗂️ Categorías",              "containerId": "" },
+    { "id": "f-reviews",  "name": "⭐ Reseñas",                 "containerId": "" },
+    { "id": "f-pqrs",     "name": "📋 PQRS",                    "containerId": "" },
+    { "id": "f-analytics","name": "📊 Métricas",                "containerId": "" },
+    { "id": "f-notif",    "name": "🔔 Notificaciones",          "containerId": "" },
+    { "id": "f-search",   "name": "🔎 Búsqueda",                "containerId": "" }
+  ],
+  "requests": [
+
+    {
+      "id": "r-001", "colId": "vitrina-api-v1", "containerId": "f-auth",
+      "name": "Health Check", "method": "GET",
+      "url": "http://localhost:3000/api/health",
+      "headers": [], "body": { "type": "none" },
+      "tests": [{ "type": "res-code", "custom": "", "action": "equal", "value": "200" }]
+    },
+    {
+      "id": "r-002", "colId": "vitrina-api-v1", "containerId": "f-auth",
+      "name": "Login — Admin", "method": "POST",
+      "url": "http://localhost:3000/api/auth/login",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"admin@vitrina.co\",\n  \"password\": \"Admin2024*\"\n}"
+      },
+      "tests": [
+        { "type": "res-code",   "action": "equal", "value": "200" },
+        { "type": "res-json",   "action": "equal", "value": "true", "custom": "ok" },
+        { "type": "res-json",   "action": "notEmpty", "custom": "data.token" }
+      ]
+    },
+    {
+      "id": "r-003", "colId": "vitrina-api-v1", "containerId": "f-auth",
+      "name": "Login — Emprendedor (Valentina)", "method": "POST",
+      "url": "http://localhost:3000/api/auth/login",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"valentina@deliciastorres.co\",\n  \"password\": \"Temp2024*\"\n}"
+      }
+    },
+    {
+      "id": "r-004", "colId": "vitrina-api-v1", "containerId": "f-auth",
+      "name": "Login — Credenciales incorrectas (debe dar 401)", "method": "POST",
+      "url": "http://localhost:3000/api/auth/login",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"admin@vitrina.co\",\n  \"password\": \"wrongpassword\"\n}"
+      },
+      "tests": [{ "type": "res-code", "action": "equal", "value": "401" }]
+    },
+    {
+      "id": "r-005", "colId": "vitrina-api-v1", "containerId": "f-auth",
+      "name": "GET /me — Perfil del usuario autenticado", "method": "GET",
+      "url": "http://localhost:3000/api/auth/me",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-006", "colId": "vitrina-api-v1", "containerId": "f-auth",
+      "name": "Cambiar contraseña", "method": "POST",
+      "url": "http://localhost:3000/api/auth/change-password",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"current_password\": \"Admin2024*\",\n  \"new_password\": \"Admin2024*\"\n}"
+      }
+    },
+    {
+      "id": "r-007", "colId": "vitrina-api-v1", "containerId": "f-auth",
+      "name": "Logout", "method": "POST",
+      "url": "http://localhost:3000/api/auth/logout",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-008", "colId": "vitrina-api-v1", "containerId": "f-auth",
+      "name": "Reset contraseña de emprendedor (Admin)", "method": "POST",
+      "url": "http://localhost:3000/api/auth/reset-password/2",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+
+    {
+      "id": "r-010", "colId": "vitrina-api-v1", "containerId": "f-users",
+      "name": "Listar emprendedores", "method": "GET",
+      "url": "http://localhost:3000/api/users?page=1&limit=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-011", "colId": "vitrina-api-v1", "containerId": "f-users",
+      "name": "Listar emprendedores — con búsqueda", "method": "GET",
+      "url": "http://localhost:3000/api/users?search=valentina",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-012", "colId": "vitrina-api-v1", "containerId": "f-users",
+      "name": "Ver detalle de emprendedor (id=2)", "method": "GET",
+      "url": "http://localhost:3000/api/users/2",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-013", "colId": "vitrina-api-v1", "containerId": "f-users",
+      "name": "Crear nuevo emprendedor", "method": "POST",
+      "url": "http://localhost:3000/api/users",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Spa Bienestar Natural\",\n  \"email\": \"spa@bienestarnatura.co\",\n  \"business_name\": \"Spa Bienestar Natural\",\n  \"description\": \"Centro de estética y bienestar con tratamientos naturales y orgánicos.\",\n  \"address\": \"Calle 72 #10-45, Bogotá\",\n  \"whatsapp\": \"3198765432\",\n  \"instagram\": \"@spabienestarnatura\",\n  \"category_ids\": [2, 11]\n}"
+      },
+      "tests": [{ "type": "res-code", "action": "equal", "value": "201" }]
+    },
+    {
+      "id": "r-014", "colId": "vitrina-api-v1", "containerId": "f-users",
+      "name": "Editar usuario", "method": "PUT",
+      "url": "http://localhost:3000/api/users/2",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Valentina Torres Ruiz\"\n}"
+      }
+    },
+    {
+      "id": "r-015", "colId": "vitrina-api-v1", "containerId": "f-users",
+      "name": "Desactivar cuenta de emprendedor", "method": "PATCH",
+      "url": "http://localhost:3000/api/users/2/status",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }
+      ],
+      "body": { "type": "json", "raw": "{\n  \"is_active\": false\n}" }
+    },
+    {
+      "id": "r-016", "colId": "vitrina-api-v1", "containerId": "f-users",
+      "name": "Reactivar cuenta de emprendedor", "method": "PATCH",
+      "url": "http://localhost:3000/api/users/2/status",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }
+      ],
+      "body": { "type": "json", "raw": "{\n  \"is_active\": true\n}" }
+    },
+
+    {
+      "id": "r-020", "colId": "vitrina-api-v1", "containerId": "f-public",
+      "name": "Vitrina — todos los negocios", "method": "GET",
+      "url": "http://localhost:3000/api/public/businesses?page=1&limit=12",
+      "headers": [], "body": { "type": "none" }
+    },
+    {
+      "id": "r-021", "colId": "vitrina-api-v1", "containerId": "f-public",
+      "name": "Vitrina — filtrar por categoría Moda", "method": "GET",
+      "url": "http://localhost:3000/api/public/businesses?category=moda",
+      "headers": [], "body": { "type": "none" }
+    },
+    {
+      "id": "r-022", "colId": "vitrina-api-v1", "containerId": "f-public",
+      "name": "Vitrina — filtrar por subcategoría Repostería", "method": "GET",
+      "url": "http://localhost:3000/api/public/businesses?subcategory=alimentos%2Freposteria",
+      "headers": [], "body": { "type": "none" }
+    },
+    {
+      "id": "r-023", "colId": "vitrina-api-v1", "containerId": "f-public",
+      "name": "Vitrina — búsqueda por palabra clave", "method": "GET",
+      "url": "http://localhost:3000/api/public/businesses?search=torta",
+      "headers": [], "body": { "type": "none" }
+    },
+    {
+      "id": "r-024", "colId": "vitrina-api-v1", "containerId": "f-public",
+      "name": "Vitrina — ordenar por mejor calificación", "method": "GET",
+      "url": "http://localhost:3000/api/public/businesses?sort=rating",
+      "headers": [], "body": { "type": "none" }
+    },
+    {
+      "id": "r-025", "colId": "vitrina-api-v1", "containerId": "f-public",
+      "name": "Perfil público — Delicias Torres", "method": "GET",
+      "url": "http://localhost:3000/api/public/businesses/delicias-torres",
+      "headers": [], "body": { "type": "none" }
+    },
+    {
+      "id": "r-026", "colId": "vitrina-api-v1", "containerId": "f-public",
+      "name": "Perfil público — negocio inexistente (debe dar 404)", "method": "GET",
+      "url": "http://localhost:3000/api/public/businesses/tienda-que-no-existe",
+      "headers": [], "body": { "type": "none" },
+      "tests": [{ "type": "res-code", "action": "equal", "value": "404" }]
+    },
+    {
+      "id": "r-027", "colId": "vitrina-api-v1", "containerId": "f-public",
+      "name": "Árbol de categorías", "method": "GET",
+      "url": "http://localhost:3000/api/public/categories",
+      "headers": [], "body": { "type": "none" }
+    },
+    {
+      "id": "r-028", "colId": "vitrina-api-v1", "containerId": "f-public",
+      "name": "Productos similares al producto 1", "method": "GET",
+      "url": "http://localhost:3000/api/public/similar/1",
+      "headers": [], "body": { "type": "none" }
+    },
+    {
+      "id": "r-029", "colId": "vitrina-api-v1", "containerId": "f-public",
+      "name": "Comparador de productos (ids 1,2,3)", "method": "GET",
+      "url": "http://localhost:3000/api/products/compare?ids=1,2,3",
+      "headers": [], "body": { "type": "none" }
+    },
+
+    {
+      "id": "r-030", "colId": "vitrina-api-v1", "containerId": "f-biz",
+      "name": "Ver mi tienda", "method": "GET",
+      "url": "http://localhost:3000/api/businesses/me",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-031", "colId": "vitrina-api-v1", "containerId": "f-biz",
+      "name": "Editar mi tienda", "method": "PUT",
+      "url": "http://localhost:3000/api/businesses/me",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"description\": \"Repostería artesanal premium con ingredientes 100% naturales. Especializados en tortas personalizadas para eventos.\",\n  \"whatsapp\": \"3001234568\",\n  \"instagram\": \"@deliciastorres_oficial\",\n  \"hours\": [\n    { \"day_of_week\": 1, \"open_time\": \"08:00\", \"close_time\": \"19:00\", \"is_closed\": false },\n    { \"day_of_week\": 0, \"open_time\": null, \"close_time\": null, \"is_closed\": true }\n  ]\n}"
+      }
+    },
+    {
+      "id": "r-032", "colId": "vitrina-api-v1", "containerId": "f-biz",
+      "name": "Listar todas las tiendas (Admin)", "method": "GET",
+      "url": "http://localhost:3000/api/businesses",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+
+    {
+      "id": "r-040", "colId": "vitrina-api-v1", "containerId": "f-products",
+      "name": "Ver mis productos", "method": "GET",
+      "url": "http://localhost:3000/api/products?page=1&limit=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-041", "colId": "vitrina-api-v1", "containerId": "f-products",
+      "name": "Crear producto", "method": "POST",
+      "url": "http://localhost:3000/api/products",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Cheesecake de Frutos Rojos\",\n  \"description\": \"Cheesecake artesanal con base de galleta y cobertura de frutos rojos frescos. Porciones individuales o torta completa.\",\n  \"base_price\": 55000,\n  \"subcategory_id\": 9,\n  \"variants\": [\n    { \"attribute_name\": \"Tamaño\", \"attribute_value\": \"Porción individual\", \"price_modifier\": -40000, \"stock\": 20 },\n    { \"attribute_name\": \"Tamaño\", \"attribute_value\": \"Torta 8 porciones\", \"price_modifier\": 0, \"stock\": 8 },\n    { \"attribute_name\": \"Tamaño\", \"attribute_value\": \"Torta 12 porciones\", \"price_modifier\": 30000, \"stock\": 4 }\n  ]\n}"
+      }
+    },
+    {
+      "id": "r-042", "colId": "vitrina-api-v1", "containerId": "f-products",
+      "name": "Editar producto (id=1)", "method": "PUT",
+      "url": "http://localhost:3000/api/products/1",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"description\": \"Torta artesanal bañada en tres tipos de leche con crema chantilly. Disponible sin azúcar.\",\n  \"base_price\": 90000\n}"
+      }
+    },
+    {
+      "id": "r-043", "colId": "vitrina-api-v1", "containerId": "f-products",
+      "name": "Desactivar producto (id=3)", "method": "PUT",
+      "url": "http://localhost:3000/api/products/3",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }
+      ],
+      "body": { "type": "json", "raw": "{\n  \"is_active\": false\n}" }
+    },
+    {
+      "id": "r-044", "colId": "vitrina-api-v1", "containerId": "f-products",
+      "name": "Ver variantes del producto 1", "method": "GET",
+      "url": "http://localhost:3000/api/products/1/variants",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-045", "colId": "vitrina-api-v1", "containerId": "f-products",
+      "name": "Agregar variante al producto 1", "method": "POST",
+      "url": "http://localhost:3000/api/products/1/variants",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"attribute_name\": \"Tamaño\",\n  \"attribute_value\": \"XL (20 porciones)\",\n  \"price_modifier\": 50000,\n  \"stock\": 3,\n  \"sku\": \"DTT-TL-XL\"\n}"
+      }
+    },
+    {
+      "id": "r-046", "colId": "vitrina-api-v1", "containerId": "f-products",
+      "name": "Editar stock de variante 1 del producto 1", "method": "PUT",
+      "url": "http://localhost:3000/api/products/1/variants/1",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }
+      ],
+      "body": { "type": "json", "raw": "{\n  \"stock\": 15\n}" }
+    },
+    {
+      "id": "r-047", "colId": "vitrina-api-v1", "containerId": "f-products",
+      "name": "Eliminar producto (id=3)", "method": "DELETE",
+      "url": "http://localhost:3000/api/products/3",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }],
+      "body": { "type": "none" }
+    },
+
+    {
+      "id": "r-050", "colId": "vitrina-api-v1", "containerId": "f-cats",
+      "name": "Listar categorías (Admin)", "method": "GET",
+      "url": "http://localhost:3000/api/categories",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-051", "colId": "vitrina-api-v1", "containerId": "f-cats",
+      "name": "Crear categoría principal", "method": "POST",
+      "url": "http://localhost:3000/api/categories",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Mascotas\",\n  \"description\": \"Productos y servicios para animales de compañía\"\n}"
+      }
+    },
+    {
+      "id": "r-052", "colId": "vitrina-api-v1", "containerId": "f-cats",
+      "name": "Crear subcategoría (hija de Mascotas)", "method": "POST",
+      "url": "http://localhost:3000/api/categories",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Accesorios para mascotas\",\n  \"parent_id\": 37,\n  \"description\": \"Correas, collares, juguetes y más\"\n}"
+      }
+    },
+    {
+      "id": "r-053", "colId": "vitrina-api-v1", "containerId": "f-cats",
+      "name": "Desactivar categoría", "method": "PUT",
+      "url": "http://localhost:3000/api/categories/37",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }
+      ],
+      "body": { "type": "json", "raw": "{\n  \"is_active\": false\n}" }
+    },
+
+    {
+      "id": "r-060", "colId": "vitrina-api-v1", "containerId": "f-reviews",
+      "name": "Crear reseña — negocio (público)", "method": "POST",
+      "url": "http://localhost:3000/api/reviews",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"business_id\": 1,\n  \"reviewer_name\": \"Juan Prueba\",\n  \"reviewer_email\": \"juan@test.com\",\n  \"rating\": 5,\n  \"comment\": \"Excelente servicio y productos de primera calidad. 100% recomendados.\"\n}"
+      }
+    },
+    {
+      "id": "r-061", "colId": "vitrina-api-v1", "containerId": "f-reviews",
+      "name": "Crear reseña — producto específico (público)", "method": "POST",
+      "url": "http://localhost:3000/api/reviews",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"business_id\": 1,\n  \"product_id\": 2,\n  \"reviewer_name\": \"Ana Gómez\",\n  \"rating\": 4,\n  \"comment\": \"Los macarons estaban deliciosos. El empaque llegó perfecto.\"\n}"
+      }
+    },
+    {
+      "id": "r-062", "colId": "vitrina-api-v1", "containerId": "f-reviews",
+      "name": "Listar reseñas (Admin)", "method": "GET",
+      "url": "http://localhost:3000/api/reviews?page=1&limit=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-063", "colId": "vitrina-api-v1", "containerId": "f-reviews",
+      "name": "Ocultar reseña (Admin)", "method": "PATCH",
+      "url": "http://localhost:3000/api/reviews/1/visibility",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }
+      ],
+      "body": { "type": "json", "raw": "{\n  \"is_visible\": false\n}" }
+    },
+
+    {
+      "id": "r-070", "colId": "vitrina-api-v1", "containerId": "f-pqrs",
+      "name": "Enviar PQRS — sobre plataforma (público)", "method": "POST",
+      "url": "http://localhost:3000/api/pqrs",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Carlos Visitante\",\n  \"email\": \"carlos@test.com\",\n  \"type\": \"suggestion\",\n  \"message\": \"Sería genial poder filtrar los negocios por horario de atención para saber cuáles están abiertos ahora mismo.\"\n}"
+      }
+    },
+    {
+      "id": "r-071", "colId": "vitrina-api-v1", "containerId": "f-pqrs",
+      "name": "Enviar PQRS — queja sobre una tienda (público)", "method": "POST",
+      "url": "http://localhost:3000/api/pqrs",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"business_id\": 1,\n  \"name\": \"María López\",\n  \"email\": \"maria@test.com\",\n  \"type\": \"complaint\",\n  \"message\": \"Realicé un pedido hace 3 días y no he recibido respuesta por WhatsApp. Por favor mejorar la atención.\"\n}"
+      }
+    },
+    {
+      "id": "r-072", "colId": "vitrina-api-v1", "containerId": "f-pqrs",
+      "name": "Listar PQRS (Admin)", "method": "GET",
+      "url": "http://localhost:3000/api/pqrs?page=1&limit=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-073", "colId": "vitrina-api-v1", "containerId": "f-pqrs",
+      "name": "Filtrar PQRS pendientes (Admin)", "method": "GET",
+      "url": "http://localhost:3000/api/pqrs?status=pending",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-074", "colId": "vitrina-api-v1", "containerId": "f-pqrs",
+      "name": "Responder PQRS (Admin)", "method": "PATCH",
+      "url": "http://localhost:3000/api/pqrs/1/respond",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"admin_response\": \"Gracias por tu sugerencia. La hemos registrado y será evaluada para una próxima actualización de la plataforma.\",\n  \"status\": \"resolved\"\n}"
+      }
+    },
+    {
+      "id": "r-075", "colId": "vitrina-api-v1", "containerId": "f-pqrs",
+      "name": "Ver PQRS de mi tienda (Emprendedor)", "method": "GET",
+      "url": "http://localhost:3000/api/pqrs/my-store",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }],
+      "body": { "type": "none" }
+    },
+
+    {
+      "id": "r-080", "colId": "vitrina-api-v1", "containerId": "f-analytics",
+      "name": "Registrar evento — page_view (público)", "method": "POST",
+      "url": "http://localhost:3000/api/analytics/event",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"business_id\": 1,\n  \"event_type\": \"page_view\",\n  \"session_id\": \"sess_test_001\",\n  \"duration_seconds\": 120\n}"
+      }
+    },
+    {
+      "id": "r-081", "colId": "vitrina-api-v1", "containerId": "f-analytics",
+      "name": "Registrar evento — whatsapp_click (público)", "method": "POST",
+      "url": "http://localhost:3000/api/analytics/event",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"business_id\": 1,\n  \"event_type\": \"whatsapp_click\",\n  \"session_id\": \"sess_test_001\",\n  \"duration_seconds\": 0\n}"
+      }
+    },
+    {
+      "id": "r-082", "colId": "vitrina-api-v1", "containerId": "f-analytics",
+      "name": "Métricas globales (Admin)", "method": "GET",
+      "url": "http://localhost:3000/api/analytics/global",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-083", "colId": "vitrina-api-v1", "containerId": "f-analytics",
+      "name": "Métricas globales — con rango de fechas (Admin)", "method": "GET",
+      "url": "http://localhost:3000/api/analytics/global?from=2024-11-01&to=2024-11-30",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-084", "colId": "vitrina-api-v1", "containerId": "f-analytics",
+      "name": "Métricas de mi tienda (Emprendedor)", "method": "GET",
+      "url": "http://localhost:3000/api/analytics/my-store",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ENTREPRENEUR}}" }],
+      "body": { "type": "none" }
+    },
+
+    {
+      "id": "r-090", "colId": "vitrina-api-v1", "containerId": "f-notif",
+      "name": "Ver mis notificaciones", "method": "GET",
+      "url": "http://localhost:3000/api/notifications",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-091", "colId": "vitrina-api-v1", "containerId": "f-notif",
+      "name": "Marcar notificación como leída", "method": "PATCH",
+      "url": "http://localhost:3000/api/notifications/1/read",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+    {
+      "id": "r-092", "colId": "vitrina-api-v1", "containerId": "f-notif",
+      "name": "Marcar todas como leídas", "method": "PATCH",
+      "url": "http://localhost:3000/api/notifications/read-all",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{TOKEN_ADMIN}}" }],
+      "body": { "type": "none" }
+    },
+
+    {
+      "id": "r-100", "colId": "vitrina-api-v1", "containerId": "f-search",
+      "name": "Buscar — negocios y productos", "method": "GET",
+      "url": "http://localhost:3000/api/search?q=torta",
+      "headers": [], "body": { "type": "none" }
+    },
+    {
+      "id": "r-101", "colId": "vitrina-api-v1", "containerId": "f-search",
+      "name": "Buscar — solo negocios", "method": "GET",
+      "url": "http://localhost:3000/api/search?q=moda&type=businesses",
+      "headers": [], "body": { "type": "none" }
+    },
+    {
+      "id": "r-102", "colId": "vitrina-api-v1", "containerId": "f-search",
+      "name": "Buscar — solo productos", "method": "GET",
+      "url": "http://localhost:3000/api/search?q=camisa&type=products",
+      "headers": [], "body": { "type": "none" }
+    },
+    {
+      "id": "r-103", "colId": "vitrina-api-v1", "containerId": "f-search",
+      "name": "Buscar — query muy corto (debe dar aviso)", "method": "GET",
+      "url": "http://localhost:3000/api/search?q=a",
+      "headers": [], "body": { "type": "none" }
+    }
+  ]
+}
