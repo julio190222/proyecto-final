@@ -72,11 +72,12 @@ export const publicAPI = {
 }
 
 export const usersAPI = {
-  list:           (params) => api.get('/users', { params }),
-  getOne:         (id)     => api.get(`/users/${id}`),
-  create:         (data)   => api.post('/users', data),
-  update:         (id, data) => api.put(`/users/${id}`, data),
+  list:           (params)        => api.get('/users', { params }),
+  getOne:         (id)            => api.get(`/users/${id}`),
+  create:         (data)          => api.post('/users', data),
+  update:         (id, data)      => api.put(`/users/${id}`, data),
   toggleStatus:   (id, is_active) => api.patch(`/users/${id}/status`, { is_active }),
+  delete:         (id)            => api.delete(`/users/${id}`),
 }
 
 export const businessAPI = {
@@ -90,15 +91,15 @@ export const businessAPI = {
 }
 
 export const productsAPI = {
-  list:           (params)       => api.get('/products', { params }),
-  create:         (data)         => api.post('/products', data),
-  update:         (id, data)     => api.put(`/products/${id}`, data),
-  remove:         (id)           => api.delete(`/products/${id}`),
-  uploadImages:   (id, form)     => api.post(`/products/${id}/images`, form, { headers: { 'Content-Type': 'multipart/form-data' } }),
-  getVariants:    (id)           => api.get(`/products/${id}/variants`),
-  addVariant:     (id, data)     => api.post(`/products/${id}/variants`, data),
-  updateVariant:  (id, vid, data)=> api.put(`/products/${id}/variants/${vid}`, data),
-  removeVariant:  (id, vid)      => api.delete(`/products/${id}/variants/${vid}`),
+  list:           (params)        => api.get('/products', { params }),
+  create:         (data)          => api.post('/products', data),
+  update:         (id, data)      => api.put(`/products/${id}`, data),
+  remove:         (id)            => api.delete(`/products/${id}`),
+  uploadImages:   (id, form)      => api.post(`/products/${id}/images`, form, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  getVariants:    (id)            => api.get(`/products/${id}/variants`),
+  addVariant:     (id, data)      => api.post(`/products/${id}/variants`, data),
+  updateVariant:  (id, vid, data) => api.put(`/products/${id}/variants/${vid}`, data),
+  removeVariant:  (id, vid)       => api.delete(`/products/${id}/variants/${vid}`),
 }
 
 export const categoriesAPI = {
@@ -109,22 +110,22 @@ export const categoriesAPI = {
 }
 
 export const reviewsAPI = {
-  create:         (data)      => api.post('/reviews', data),
-  list:           (params)    => api.get('/reviews', { params }),
-  toggleVisibility: (id, is_visible) => api.patch(`/reviews/${id}/visibility`, { is_visible }),
+  create:           (data)              => api.post('/reviews', data),
+  list:             (params)            => api.get('/reviews', { params }),
+  toggleVisibility: (id, is_visible)    => api.patch(`/reviews/${id}/visibility`, { is_visible }),
 }
 
 export const pqrsAPI = {
-  create:       (data)   => api.post('/pqrs', data),
-  list:         (params) => api.get('/pqrs', { params }),
-  myStore:      ()       => api.get('/pqrs/my-store'),
-  respond:      (id, data) => api.patch(`/pqrs/${id}/respond`, data),
+  create:   (data)     => api.post('/pqrs', data),
+  list:     (params)   => api.get('/pqrs', { params }),
+  myStore:  ()         => api.get('/pqrs/my-store'),
+  respond:  (id, data) => api.patch(`/pqrs/${id}/respond`, data),
 }
 
 export const analyticsAPI = {
-  event:    (data)   => api.post('/analytics/event', data),
-  global:   (params) => api.get('/analytics/global', { params }),
-  myStore:  ()       => api.get('/analytics/my-store'),
+  event:   (data)   => api.post('/analytics/event', data),
+  global:  (params) => api.get('/analytics/global', { params }),
+  myStore: ()       => api.get('/analytics/my-store'),
 }
 
 export const notificationsAPI = {

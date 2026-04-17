@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { FiPlus, FiEdit2, FiToggleLeft, FiToggleRight, FiSearch, FiUser, FiRefreshCw, FiEye, FiEyeOff, FiX } from 'react-icons/fi'
+import { FiPlus, FiEdit2, FiToggleLeft, FiToggleRight, FiSearch, FiUser, FiRefreshCw, FiEye, FiEyeOff, FiX, FiTrash2 } from 'react-icons/fi'
 import { usersAPI, categoriesAPI, authAPI } from '../../services/api'
 import { Spinner, EmptyState, Pagination, Modal } from '../../components/common/UI'
 import toast from 'react-hot-toast'
@@ -100,6 +100,19 @@ export default function AdminUsers() {
     } catch { toast.error('Error al restablecer contraseña') }
   }
 
+  const deleteUser = async (user) => {
+    if (!window.confirm(`¿Seguro que deseas eliminar a "${user.name}"? Esta acción no se puede deshacer.`)) return
+    try {
+      await usersAPI.delete(user.id)
+      toast.success('Emprendedor eliminado')
+      load()
+    } catch (err) {
+      console.error('STATUS:', err.response?.status)
+      console.error('MESSAGE:', err.response?.data)
+      toast.error(err.response?.data?.message || 'Error al eliminar el emprendedor')
+    }
+  }
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -175,6 +188,10 @@ export default function AdminUsers() {
                         <button onClick={() => resetPwd(u)} title="Restablecer contraseña"
                           className="p-2 rounded-lg text-primary/40 hover:text-primary hover:bg-primary/5 transition-colors">
                           <FiRefreshCw className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => deleteUser(u)} title="Eliminar emprendedor"
+                          className="p-2 rounded-lg text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors">
+                          <FiTrash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </td>

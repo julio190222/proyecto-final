@@ -7,6 +7,8 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { FiSearch, FiMenu, FiX, FiLogIn, FiGrid } from 'react-icons/fi'
 import { useAuth } from '../../context/AuthContext'
+import logo from '../../assets/logo.png'
+
 
 export default function Navbar() {
   const { isAuthenticated, isAdmin, isEntrepreneur, user } = useAuth()
@@ -41,18 +43,18 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 gap-4">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-accent">
-              <span className="text-primary font-black text-lg font-heading">V</span>
-            </div>
-            <div className="hidden sm:block">
-              <p className={`font-heading font-bold text-sm leading-none ${scrolled ? 'text-primary' : 'text-white'}`}>
-                Vitrina
-              </p>
-              <p className={`font-body text-xs leading-none ${scrolled ? 'text-primary/50' : 'text-white/60'}`}>
-                Empresarial Digital
-              </p>
-            </div>
+          <Link to="/" className="flex items-center flex-shrink-0">
+            <img 
+              src={logo} 
+              alt="Soledad Conecta" 
+              className={`h-16 w-auto object-contain transition-all duration-300 hover:scale-105
+                ${scrolled 
+                  ? ''                    
+                  : 'brightness-0 invert' 
+                }
+              `}
+              style={{ maxWidth: '160px' }}
+            />
           </Link>
 
           {/* Barra de búsqueda — desktop */}

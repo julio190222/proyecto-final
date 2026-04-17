@@ -44,4 +44,11 @@ async function toggleStatus(req, res, next) {
   } catch (err) { next(err); }
 }
 
-module.exports = { list, getOne, create, update, toggleStatus };
+async function remove(req, res, next) {
+  try {
+    await userService.deleteUser(parseInt(req.params.id));
+    return success(res, {}, 'Emprendedor eliminado correctamente');
+  } catch (err) { next(err); }
+}
+
+module.exports = { list, getOne, create, update, toggleStatus, remove };

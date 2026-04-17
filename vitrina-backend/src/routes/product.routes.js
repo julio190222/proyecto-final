@@ -33,7 +33,7 @@ router.post('/', ...auth, async (req, res, next) => {
     if (!biz.length) return res.status(404).json({ ok: false, message: 'Tienda no encontrada' });
     const slug = `${biz[0].id}-${generateSlug(name)}-${Date.now()}`;
     const [r] = await pool.query(
-      'INSERT INTO products (business_id,subcategory_id,name,slug,description,base_price,is_active) VALUES (?,?,?,?,?,?,?)'
+      'INSERT INTO products (business_id,subcategory_id,name,slug,description,base_price,is_active) VALUES (?,?,?,?,?,?,?)',
       [biz[0].id, subcategory_id||null, name, slug, description||null, base_price, true]
     );
     if (variants?.length) {

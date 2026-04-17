@@ -11,6 +11,7 @@ router.get('/:id',                     ctrl.getOne);
 router.post('/',                       ctrl.create);
 router.put('/:id',                     ctrl.update);
 router.patch('/:id/status',            ctrl.toggleStatus);
+router.delete('/:id',                  ctrl.remove);
 router.post('/:userId/reset-password', authCtrl.resetPassword);
 
 module.exports = router;

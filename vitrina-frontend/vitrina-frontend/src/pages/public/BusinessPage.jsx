@@ -71,7 +71,6 @@ function ProductCard({ product, business, onView }) {
           {product.is_new && <NewBadge />}
           <StockBadge status={status} />
         </div>
-        {/* Contador de vistas */}
         <div className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-lg backdrop-blur-sm">
           👁 {Math.floor(Math.random() * 80 + 20)} vistas
         </div>
@@ -105,8 +104,9 @@ function ProductModal({ product, business, onClose }) {
       <div className="relative bg-white w-full sm:max-w-2xl rounded-t-3xl sm:rounded-2xl shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto">
         <button onClick={onClose} className="absolute top-4 right-4 z-10 p-2 rounded-xl bg-white/80 backdrop-blur-sm text-primary hover:bg-gray-100 transition-colors"><FiX className="w-5 h-5" /></button>
         {imgs.length > 0 && (
-          <div className="relative h-64 sm:h-72 overflow-hidden rounded-t-3xl sm:rounded-t-2xl bg-gray-100">
-            <img src={imgs[imgIdx]?.url} alt="" className="w-full h-full object-cover" />
+          // ── ÚNICO CAMBIO: sin altura fija, object-contain para ver la imagen completa ──
+          <div className="relative overflow-hidden rounded-t-3xl sm:rounded-t-2xl bg-gray-50">
+            <img src={imgs[imgIdx]?.url} alt={product.name} className="w-full max-h-96 object-contain" />
             {imgs.length > 1 && (
               <>
                 <button onClick={() => setImgIdx(p => (p - 1 + imgs.length) % imgs.length)} className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-white/80 rounded-xl"><FiChevronLeft className="w-5 h-5" /></button>
@@ -202,8 +202,8 @@ export default function BusinessPage() {
 
       <div className="page-section">
         {/* Header del negocio */}
-        <div className="relative -mt-12 mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-4">
+        <div className="relative -mt-16 mb-8">
+          <div className="glass rounded-2xl p-4 shadow-xl flex flex-col sm:flex-row sm:items-end gap-4">
             <div className="w-24 h-24 rounded-2xl border-4 border-white shadow-card overflow-hidden bg-white flex-shrink-0">
               {biz.logo_url
                 ? <img src={biz.logo_url} alt="" className="w-full h-full object-cover" />

@@ -74,11 +74,9 @@ async function createEntrepreneur(data, adminId) {
     tiktok, website, category_ids,
   } = data;
 
-  // Verificar email único
   const [existing] = await pool.query('SELECT id FROM users WHERE email = ?', [email]);
   if (existing.length) throw { statusCode: 409, message: 'Ya existe un usuario con ese email' };
 
-  // Contraseña temporal
   const tempPassword = _generateTempPassword();
   const hash         = await bcrypt.hash(tempPassword, 12);
 
@@ -86,7 +84,6 @@ async function createEntrepreneur(data, adminId) {
   try {
     await conn.beginTransaction();
 
-    // 1. Crear usuario
     const [userResult] = await conn.query(
       `INSERT INTO users (name, email, password_hash, role, is_active, must_change_password)
        VALUES (?, ?, ?, 'entrepreneur', TRUE, TRUE)`,
@@ -94,7 +91,6 @@ async function createEntrepreneur(data, adminId) {
     );
     const userId = userResult.insertId;
 
-    // 2. Crear microtienda
     const bizSlug = await _uniqueSlug(conn, generateSlug(business_name));
     const [bizResult] = await conn.query(
       `INSERT INTO businesses
@@ -106,13 +102,11 @@ async function createEntrepreneur(data, adminId) {
     );
     const businessId = bizResult.insertId;
 
-    // 3. Asignar categorías
     if (category_ids?.length) {
       const values = category_ids.map(cid => [businessId, cid]);
       await conn.query('INSERT INTO business_categories (business_id, category_id) VALUES ?', [values]);
     }
 
-    // 4. Horarios vacíos (7 días, todos cerrados por defecto)
     const hoursValues = [0,1,2,3,4,5,6].map(d => [businessId, d, null, null, true]);
     await conn.query(
       'INSERT INTO business_hours (business_id, day_of_week, open_time, close_time, is_closed) VALUES ?',
@@ -171,11 +165,42 @@ async function toggleStatus(id, is_active) {
 
   await pool.query('UPDATE users SET is_active = ? WHERE id = ?', [is_active, id]);
 
-  // Reflejar en el negocio
   const status = is_active ? 'active' : 'inactive';
   await pool.query('UPDATE businesses SET status = ? WHERE user_id = ?', [status, id]);
 
   logger.info(`Usuario ${id} ${is_active ? 'activado' : 'desactivado'}`);
+}
+
+// ── Eliminar emprendedor ─────────────────────────────────────
+async function deleteUser(id) {
+  const [existing] = await pool.query(
+    "SELECT id FROM users WHERE id = ? AND role = 'entrepreneur'", [id]
+  );
+  if (!existing.length) throw { statusCode: 404, message: 'Emprendedor no encontrado' };
+
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    // Eliminar en orden para respetar foreign keys
+    const [[biz]] = await conn.query('SELECT id FROM businesses WHERE user_id = ?', [id]);
+    if (biz) {
+      await conn.query('DELETE FROM business_categories WHERE business_id = ?', [biz.id]);
+      await conn.query('DELETE FROM business_hours WHERE business_id = ?', [biz.id]);
+      await conn.query('DELETE FROM businesses WHERE id = ?', [biz.id]);
+    }
+
+    await conn.query('DELETE FROM session_logs WHERE user_id = ?', [id]);
+    await conn.query('DELETE FROM users WHERE id = ?', [id]);
+
+    await conn.commit();
+    logger.info(`Emprendedor ${id} eliminado`);
+  } catch (err) {
+    await conn.rollback();
+    throw err;
+  } finally {
+    conn.release();
+  }
 }
 
 // ── Helpers ──────────────────────────────────────────────────
@@ -194,4 +219,4 @@ function _generateTempPassword() {
   return Array.from({ length: 10 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
 }
 
-module.exports = { listEntrepreneurs, getUserById, createEntrepreneur, updateUser, toggleStatus };
+module.exports = { listEntrepreneurs, getUserById, createEntrepreneur, updateUser, toggleStatus, deleteUser };

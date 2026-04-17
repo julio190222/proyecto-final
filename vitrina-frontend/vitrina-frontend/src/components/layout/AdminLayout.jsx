@@ -7,19 +7,20 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
   FiHome, FiUsers, FiTag, FiStar, FiMessageSquare,
-  FiBarChart2, FiBell, FiLogOut, FiMenu, FiX, FiShield
+  FiBarChart2, FiBell, FiLogOut, FiMenu, FiX, FiShield, FiExternalLink
 } from 'react-icons/fi'
 import { useAuth } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
 
 const NAV_ITEMS = [
-  { to: '/admin',             icon: FiHome,         label: 'Dashboard',     end: true },
-  { to: '/admin/usuarios',    icon: FiUsers,        label: 'Usuarios' },
-  { to: '/admin/categorias',  icon: FiTag,          label: 'Categorías' },
-  { to: '/admin/resenas',     icon: FiStar,         label: 'Reseñas' },
-  { to: '/admin/pqrs',        icon: FiMessageSquare,label: 'PQRS' },
-  { to: '/admin/metricas',    icon: FiBarChart2,    label: 'Métricas' },
-  { to: '/admin/notificaciones',icon: FiBell,       label: 'Notificaciones' },
+  { to: '/admin',               icon: FiHome,          label: 'Dashboard',       end: true },
+  { to: '/admin/usuarios',      icon: FiUsers,         label: 'Usuarios' },
+  { to: '/admin/categorias',    icon: FiTag,           label: 'Categorías' },
+  { to: '/admin/resenas',       icon: FiStar,          label: 'Reseñas' },
+  { to: '/admin/pqrs',          icon: FiMessageSquare, label: 'PQRS' },
+  { to: '/admin/metricas',      icon: FiBarChart2,     label: 'Métricas' },
+  { to: '/admin/notificaciones',icon: FiBell,          label: 'Notificaciones' },
+  { to: '/',                    icon: FiExternalLink,  label: 'Ver sitio' },
 ]
 
 export default function AdminLayout({ children }) {

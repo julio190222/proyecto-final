@@ -23,7 +23,7 @@
   body {
     font-family: var(--font-body);
     color: var(--color-primary);
-    background-color: #f8f9fc;
+    background: linear-gradient(to bottom, #f8f9fc, #eef1f7);
     min-height: 100vh;
   }
 
@@ -42,28 +42,32 @@
 /* ── Componentes reutilizables ──────────────────────────────── */
 @layer components {
 
-  /* Botón primario — azul */
+  /* Botón primario */
   .btn-primary {
     @apply bg-primary text-white font-semibold px-6 py-3 rounded-xl
            hover:bg-primary-600 active:scale-95
-           transition-all duration-200 shadow-sm hover:shadow-card
-           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+           transition-all duration-200 shadow-sm hover:shadow-lg;
   }
 
-  /* Botón acento — amarillo */
+  /* Botón acento MEJORADO */
   .btn-accent {
     @apply bg-accent text-primary font-bold px-6 py-3 rounded-xl
-           hover:bg-accent-600 active:scale-95
-           transition-all duration-200 shadow-accent
-           focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2;
+           transition-all duration-300 shadow-md;
+  }
+
+  .btn-accent:hover {
+    @apply shadow-xl scale-[1.03];
+  }
+
+  .btn-accent:active {
+    @apply scale-95;
   }
 
   /* Botón outline */
   .btn-outline {
     @apply border-2 border-primary text-primary font-semibold px-6 py-3 rounded-xl
            hover:bg-primary hover:text-white active:scale-95
-           transition-all duration-200
-           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+           transition-all duration-200;
   }
 
   /* Botón ghost */
@@ -72,10 +76,14 @@
            hover:bg-primary/10 active:scale-95 transition-all duration-200;
   }
 
-  /* Tarjeta base */
+  /* TARJETA MEJORADA */
   .card {
-    @apply bg-white rounded-2xl shadow-card hover:shadow-card-hover
-           transition-shadow duration-300 overflow-hidden;
+    @apply bg-white rounded-2xl border border-gray-100 shadow-sm 
+           transition-all duration-300 overflow-hidden;
+  }
+
+  .card:hover {
+    @apply shadow-xl -translate-y-1;
   }
 
   /* Input base */
@@ -91,7 +99,7 @@
     @apply block text-sm font-semibold text-primary mb-1.5;
   }
 
-  /* Badge de categoría */
+  /* Badge */
   .badge {
     @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold;
   }
@@ -101,34 +109,42 @@
   .badge-warning { @apply badge bg-orange-100 text-orange-700; }
   .badge-danger  { @apply badge bg-red-100 text-red-700; }
 
-  /* Stock status */
+  /* Stock */
   .stock-available  { @apply badge bg-green-50 text-green-700; }
   .stock-low        { @apply badge bg-orange-50 text-orange-700; }
   .stock-out        { @apply badge bg-red-50 text-red-600; }
 
-  /* Sidebar item */
+  /* Sidebar */
   .sidebar-item {
     @apply flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm
            transition-all duration-200 cursor-pointer;
   }
   .sidebar-item-active {
-    @apply sidebar-item bg-accent text-primary shadow-accent/30 shadow-md;
+    @apply sidebar-item bg-accent text-primary shadow-md;
   }
   .sidebar-item-inactive {
     @apply sidebar-item text-white/70 hover:bg-white/10 hover:text-white;
   }
 
-  /* Sección de página */
+  /* Sección */
   .page-section {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* Título de sección */
+  /* TITULOS MEJORADOS */
+  .text-h1 {
+    @apply text-2xl sm:text-3xl font-black tracking-tight;
+  }
+
+  .text-h2 {
+    @apply text-xl sm:text-2xl font-bold;
+  }
+
   .section-title {
     @apply text-h2 font-heading text-primary font-bold;
   }
 
-  /* Divider con texto */
+  /* Divider */
   .divider {
     @apply flex items-center gap-4 my-6;
   }
@@ -138,12 +154,12 @@
     @apply flex-1 border-t border-gray-200;
   }
 
-  /* Skeleton loader */
+  /* Skeleton */
   .skeleton {
     @apply animate-pulse bg-gray-200 rounded-lg;
   }
 
-  /* Tabla admin */
+  /* Tabla */
   .table-admin {
     @apply w-full text-sm text-left;
   }
@@ -160,9 +176,10 @@
 
 /* ── Utilidades extra ───────────────────────────────────────── */
 @layer utilities {
+
   .text-balance { text-wrap: balance; }
 
-  /* Gradiente de marca */
+  /* Gradiente marca */
   .gradient-brand {
     background: linear-gradient(135deg, #1d294a 0%, #2d3f6e 100%);
   }
@@ -172,30 +189,47 @@
     background: linear-gradient(135deg, #ffdd1a 0%, #ffc400 100%);
   }
 
-  /* Efecto glassmorphism */
+  /* GLASS EFECTO (USALO EN HEADER 👇) */
   .glass {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
   }
 
-  /* Línea decorativa amarilla */
+  /* Línea decorativa */
   .accent-line {
     @apply border-l-4 border-accent pl-4;
   }
 
-  /* Truncar texto */
+  /* Clamp */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
   .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  /* ANIMACIÓN MODAL */
+  .animate-slide-up {
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(40px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 }
