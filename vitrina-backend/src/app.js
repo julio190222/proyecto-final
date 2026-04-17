@@ -62,7 +62,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev', { stream: { write: msg => logger.info(msg.trim()) } }));
 
 // ── Archivos estáticos (uploads) ─────────────────────────────
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  setHeaders: (res) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+}));
 
 // ── Rutas de la API ──────────────────────────────────────────
 app.use('/api/auth',          authLimiter, authRoutes);

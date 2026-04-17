@@ -1,12 +1,10 @@
 // ============================================================
 //  config/upload.js
-//  Configuración de Multer para subida de archivos
-//  Imágenes: logos, portadas, galería, productos
-//  Documentos: catálogos PDF
 // ============================================================
 
 const multer = require('multer');
 const path   = require('path');
+const fs     = require('fs');
 const { v4: uuidv4 } = require('uuid');
 
 const MAX_SIZE_BYTES = (parseInt(process.env.MAX_FILE_SIZE_MB) || 5) * 1024 * 1024;
@@ -15,7 +13,15 @@ const MAX_SIZE_BYTES = (parseInt(process.env.MAX_FILE_SIZE_MB) || 5) * 1024 * 10
 function buildStorage(folder) {
   return multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, path.join(process.env.UPLOAD_PATH || 'uploads', folder));
+      // ✅ TODO queda dentro del backend
+      const uploadPath = path.join(__dirname, '..', 'uploads', folder);
+
+      // ✅ Crear carpeta automáticamente si no existe
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
+      }
+
+      cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
       const ext = path.extname(file.originalname).toLowerCase();
@@ -24,7 +30,7 @@ function buildStorage(folder) {
   });
 }
 
-// ── Filtros de tipo MIME ─────────────────────────────────────
+// ── Filtros ─────────────────────────────────────────────────
 function imageFilter(req, file, cb) {
   const allowed = ['image/jpeg', 'image/png', 'image/webp'];
   if (allowed.includes(file.mimetype)) {
@@ -42,35 +48,35 @@ function pdfFilter(req, file, cb) {
   }
 }
 
-// ── Instancias exportadas ────────────────────────────────────
+// ── Uploads ────────────────────────────────────────────────
 const uploadLogo = multer({
-  storage : buildStorage('logos'),
+  storage: buildStorage('logos'),
   fileFilter: imageFilter,
-  limits  : { fileSize: MAX_SIZE_BYTES },
+  limits: { fileSize: MAX_SIZE_BYTES },
 });
 
 const uploadCover = multer({
-  storage : buildStorage('covers'),
+  storage: buildStorage('covers'),
   fileFilter: imageFilter,
-  limits  : { fileSize: MAX_SIZE_BYTES },
+  limits: { fileSize: MAX_SIZE_BYTES },
 });
 
 const uploadGallery = multer({
-  storage : buildStorage('gallery'),
+  storage: buildStorage('gallery'),
   fileFilter: imageFilter,
-  limits  : { fileSize: MAX_SIZE_BYTES },
+  limits: { fileSize: MAX_SIZE_BYTES },
 });
 
 const uploadProduct = multer({
-  storage : buildStorage('products'),
+  storage: buildStorage('products'),
   fileFilter: imageFilter,
-  limits  : { fileSize: MAX_SIZE_BYTES },
+  limits: { fileSize: MAX_SIZE_BYTES },
 });
 
 const uploadCatalog = multer({
-  storage : buildStorage('catalogs'),
+  storage: buildStorage('catalogs'),
   fileFilter: pdfFilter,
-  limits  : { fileSize: 20 * 1024 * 1024 }, // PDFs hasta 20MB
+  limits: { fileSize: 20 * 1024 * 1024 },
 });
 
 module.exports = {
