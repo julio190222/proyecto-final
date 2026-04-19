@@ -35,7 +35,7 @@ function ReviewForm({ businessId, productId, onSuccess }) {
       <div className="flex gap-1">
         {[1,2,3,4,5].map(s => (
           <button key={s} type="button" onClick={() => setForm(p=>({...p,rating:s}))} onMouseEnter={() => setHover(s)} onMouseLeave={() => setHover(0)}>
-            <FiStar className={`w-7 h-7 transition-colors ${s <= (hover || form.rating) ? 'text-accent fill-accent' : 'text-gray-300'}`} />
+            <FiStar className={`w-7 h-7 transition-colors ${s <= (hover || form.rating) ? 'text-accent fill-accent' : 'text-gray-500'}`} />
           </button>
         ))}
       </div>

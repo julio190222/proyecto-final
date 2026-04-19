@@ -16,6 +16,41 @@ const COLORS = [
   'from-orange-600 to-orange-500',
 ]
 
+function SubcategoryList({ subcategories, description }) {
+  const [expanded, setExpanded] = useState(false)
+  const visible = expanded ? subcategories : subcategories.slice(0, 2)
+  const hiddenCount = subcategories.length - 2
+
+  return (
+    <div className="p-4">
+      <p className="text-xs font-bold text-primary/40 uppercase tracking-wider mb-3">Subcategorías</p>
+      <div className="flex flex-wrap gap-2">
+        {visible.map(sub => (
+          <Link
+            key={sub.id}
+            to={`/?subcategory=${sub.slug}`}
+            className="flex items-center gap-1 px-3 py-1.5 bg-primary/5 hover:bg-primary/10 text-primary text-xs font-semibold rounded-xl transition-colors"
+          >
+            <FiTag className="w-3 h-3" />{sub.name}
+          </Link>
+        ))}
+
+        {hiddenCount > 0 && (
+          <button
+            onClick={() => setExpanded(prev => !prev)}
+            className="flex items-center gap-1 px-3 py-1.5 bg-transparent border border-primary/20 hover:bg-primary/5 text-primary/60 text-xs font-semibold rounded-xl transition-colors"
+          >
+            {expanded ? 'Ver menos ▴' : `+${hiddenCount} más ▾`}
+          </button>
+        )}
+      </div>
+      {description && (
+        <p className="text-xs text-primary/40 mt-3 leading-relaxed">{description}</p>
+      )}
+    </div>
+  )
+}
+
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([])
   const [loading,    setLoading]    = useState(true)
@@ -36,7 +71,7 @@ export default function CategoriesPage() {
         {loading ? <div className="flex justify-center py-16"><Spinner size="lg" /></div> : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.map((cat, i) => (
-              <div key={cat.id} className="card overflow-hidden group">
+              <div key={cat.id} className="card overflow-hidden group border border-gray-400">
                 {/* Header */}
                 <div className={`bg-gradient-to-br ${COLORS[i % COLORS.length]} p-6 relative overflow-hidden`}>
                   <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
@@ -55,18 +90,7 @@ export default function CategoriesPage() {
 
                 {/* Subcategorías */}
                 {cat.subcategories?.length > 0 && (
-                  <div className="p-4">
-                    <p className="text-xs font-bold text-primary/40 uppercase tracking-wider mb-3">Subcategorías</p>
-                    <div className="flex flex-wrap gap-2">
-                      {cat.subcategories.map(sub => (
-                        <Link key={sub.id} to={`/?subcategory=${sub.slug}`}
-                          className="flex items-center gap-1 px-3 py-1.5 bg-primary/5 hover:bg-primary/10 text-primary text-xs font-semibold rounded-xl transition-colors">
-                          <FiTag className="w-3 h-3" />{sub.name}
-                        </Link>
-                      ))}
-                    </div>
-                    {cat.description && <p className="text-xs text-primary/40 mt-3 leading-relaxed">{cat.description}</p>}
-                  </div>
+                  <SubcategoryList subcategories={cat.subcategories} description={cat.description} />
                 )}
               </div>
             ))}
