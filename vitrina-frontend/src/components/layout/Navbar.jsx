@@ -5,8 +5,10 @@
 
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { FiSearch, FiMenu, FiX, FiLogIn, FiGrid } from 'react-icons/fi'
+import { FiSearch, FiMenu, FiX, FiLogIn, FiGrid, FiArrowLeft } from 'react-icons/fi'
 import { useAuth } from '../../context/AuthContext'
+import logo from '../../assets/logo.png'
+
 
 export default function Navbar() {
   const { isAuthenticated, isAdmin, isEntrepreneur, user } = useAuth()
@@ -15,6 +17,9 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('')
   const navigate  = useNavigate()
   const location  = useLocation()
+
+  // Muestra el botón solo si hay historial para retroceder
+  const canGoBack = window.history.length > 1 && location.pathname !== '/'
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20)
@@ -30,7 +35,7 @@ export default function Navbar() {
     }
   }
 
-  const dashboardLink = isAdmin ? '/admin' : '/mi-tienda'
+  const dashboardLink  = isAdmin ? '/admin' : '/mi-tienda'
   const dashboardLabel = isAdmin ? 'Panel Admin' : 'Mi Tienda'
 
   return (
@@ -40,20 +45,33 @@ export default function Navbar() {
       <div className="page-section">
         <div className="flex items-center justify-between h-16 gap-4">
 
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-accent">
-              <span className="text-primary font-black text-lg font-heading">V</span>
-            </div>
-            <div className="hidden sm:block">
-              <p className={`font-heading font-bold text-sm leading-none ${scrolled ? 'text-primary' : 'text-white'}`}>
-                Vitrina
-              </p>
-              <p className={`font-body text-xs leading-none ${scrolled ? 'text-primary/50' : 'text-white/60'}`}>
-                Empresarial Digital
-              </p>
-            </div>
-          </Link>
+          {/* Botón retroceder + Logo */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {canGoBack && (
+              <button
+                onClick={() => navigate(-1)}
+                className={`p-2 rounded-xl transition-all duration-200 ${
+                  scrolled
+                    ? 'text-primary hover:bg-primary/10'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
+                }`}
+                aria-label="Volver"
+              >
+                <FiArrowLeft className="w-5 h-5" />
+              </button>
+            )}
+
+            <Link to="/" className="flex items-center">
+              <img
+                src={logo}
+                alt="Soledad Conecta"
+                className={`h-16 w-auto object-contain transition-all duration-300 hover:scale-105
+                  ${scrolled ? '' : 'brightness-0 invert'}
+                `}
+                style={{ maxWidth: '160px' }}
+              />
+            </Link>
+          </div>
 
           {/* Barra de búsqueda — desktop */}
           <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-md">

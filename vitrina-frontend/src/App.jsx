@@ -30,6 +30,7 @@ import EntProducts        from './pages/entrepreneur/EntProducts'
 import EntMetrics         from './pages/entrepreneur/EntMetrics'
 import EntPQRS            from './pages/entrepreneur/EntPQRS'
 import EntNotifications   from './pages/entrepreneur/EntNotifications'
+import EntEditStore       from './pages/entrepreneur/EntEditStore'
 
 export default function App() {
   return (
@@ -42,25 +43,26 @@ export default function App() {
         }} />
         <Routes>
           {/* Públicas */}
-          <Route path="/"               element={<HomePage />} />
-          <Route path="/tienda/:slug"   element={<BusinessPage />} />
-          <Route path="/categorias"     element={<CategoriesPage />} />
-          <Route path="/buscar"         element={<SearchPage />} />
-          <Route path="/pqrs"           element={<PQRSPage />} />
-          <Route path="/login"          element={<LoginPage />} />
+          <Route path="/"                element={<HomePage />} />
+          <Route path="/tienda/:slug"    element={<BusinessPage />} />
+          <Route path="/categorias"      element={<CategoriesPage />} />
+          <Route path="/buscar"          element={<SearchPage />} />
+          <Route path="/pqrs"            element={<PQRSPage />} />
+          <Route path="/login"           element={<LoginPage />} />
           <Route path="/change-password" element={<PrivateRoute><ChangePasswordPage /></PrivateRoute>} />
 
           {/* Admin */}
-          <Route path="/admin"                  element={<AdminRoute><AdminLayout><AdminDashboard /></AdminLayout></AdminRoute>} />
-          <Route path="/admin/usuarios"         element={<AdminRoute><AdminLayout><AdminUsers /></AdminLayout></AdminRoute>} />
-          <Route path="/admin/categorias"       element={<AdminRoute><AdminLayout><AdminCategories /></AdminLayout></AdminRoute>} />
-          <Route path="/admin/resenas"          element={<AdminRoute><AdminLayout><AdminReviews /></AdminLayout></AdminRoute>} />
-          <Route path="/admin/pqrs"             element={<AdminRoute><AdminLayout><AdminPQRS /></AdminLayout></AdminRoute>} />
-          <Route path="/admin/metricas"         element={<AdminRoute><AdminLayout><AdminMetrics /></AdminLayout></AdminRoute>} />
-          <Route path="/admin/notificaciones"   element={<AdminRoute><AdminLayout><AdminNotifications /></AdminLayout></AdminRoute>} />
+          <Route path="/admin"                element={<AdminRoute><AdminLayout><AdminDashboard /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/usuarios"       element={<AdminRoute><AdminLayout><AdminUsers /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/categorias"     element={<AdminRoute><AdminLayout><AdminCategories /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/resenas"        element={<AdminRoute><AdminLayout><AdminReviews /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/pqrs"           element={<AdminRoute><AdminLayout><AdminPQRS /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/metricas"       element={<AdminRoute><AdminLayout><AdminMetrics /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/notificaciones" element={<AdminRoute><AdminLayout><AdminNotifications /></AdminLayout></AdminRoute>} />
 
           {/* Emprendedor */}
           <Route path="/mi-tienda"                  element={<EntrepreneurRoute><EntrepreneurLayout><EntDashboard /></EntrepreneurLayout></EntrepreneurRoute>} />
+          <Route path="/mi-tienda/perfil"           element={<EntrepreneurRoute><EntrepreneurLayout><EntEditStore /></EntrepreneurLayout></EntrepreneurRoute>} />
           <Route path="/mi-tienda/productos"        element={<EntrepreneurRoute><EntrepreneurLayout><EntProducts /></EntrepreneurLayout></EntrepreneurRoute>} />
           <Route path="/mi-tienda/metricas"         element={<EntrepreneurRoute><EntrepreneurLayout><EntMetrics /></EntrepreneurLayout></EntrepreneurRoute>} />
           <Route path="/mi-tienda/pqrs"             element={<EntrepreneurRoute><EntrepreneurLayout><EntPQRS /></EntrepreneurLayout></EntrepreneurRoute>} />

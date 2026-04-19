@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { FiSearch, FiArrowRight, FiMapPin, FiMessageCircle, FiStar, FiTrendingUp } from 'react-icons/fi'
 import { publicAPI, analyticsAPI } from '../../services/api'
 import Navbar from '../../components/layout/Navbar'
@@ -10,11 +10,13 @@ const CATEGORY_ICONS = { 'moda':'👗', 'salud-belleza':'💆', 'alimentos':'�
 
 export default function HomePage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+
   const [businesses,  setBusinesses]  = useState([])
   const [categories,  setCategories]  = useState([])
   const [loading,     setLoading]     = useState(true)
   const [search,      setSearch]      = useState('')
-  const [activecat,   setActiveCat]   = useState('')
+  const [activecat,   setActiveCat]   = useState(searchParams.get('category') || '')
   const [page,        setPage]        = useState(1)
   const [meta,        setMeta]        = useState(null)
 
@@ -64,7 +66,6 @@ export default function HomePage() {
             <p className="text-white/70 text-lg font-body mb-10 max-w-lg mx-auto">
               Explora productos y servicios de emprendedores locales. Conecta directamente con ellos vía WhatsApp.
             </p>
-            {/* Buscador hero */}
             <form onSubmit={handleSearch} className="flex gap-3 max-w-lg mx-auto">
               <div className="relative flex-1">
                 <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
@@ -165,7 +166,6 @@ export default function HomePage() {
                         <span className="text-5xl font-heading font-black text-accent/30">{biz.name[0]}</span>
                       </div>
                     )}
-                    {/* Logo */}
                     <div className="absolute bottom-3 left-3 w-12 h-12 rounded-xl border-2 border-white shadow-card bg-white overflow-hidden">
                       {biz.logo_url
                         ? <img src={biz.logo_url} alt="" className="w-full h-full object-cover" />
@@ -188,7 +188,6 @@ export default function HomePage() {
                       )}
                     </div>
 
-                    {/* Categorías */}
                     {biz.categories?.length > 0 && (
                       <div className="flex gap-1.5 mt-3 flex-wrap">
                         {biz.categories.slice(0, 2).map(c => (
@@ -197,7 +196,6 @@ export default function HomePage() {
                       </div>
                     )}
 
-                    {/* WhatsApp */}
                     {biz.whatsapp && (
                       <button
                         onClick={e => handleWhatsApp(biz, e)}
@@ -212,7 +210,6 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Paginación simple */}
             {meta && meta.pages > 1 && (
               <div className="flex items-center justify-center gap-3 mt-10">
                 <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
